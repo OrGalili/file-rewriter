@@ -1,4 +1,5 @@
 const fs = require('fs');
+const encoding = require('encoding')
 const ruleArr = [];
 
 const rulesFile = fs.readFileSync('rules.txt', 'utf-8');
@@ -21,3 +22,6 @@ dest = sourceFile.split(/\r?\n/).map(line =>  {
 
 let destFile = fs.createWriteStream('dest.txt');
 dest.forEach(obj=> destFile.write(obj+"\n"));
+
+let exec = require('child_process').exec;
+exec('code --diff source.txt dest.txt');
