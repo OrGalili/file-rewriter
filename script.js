@@ -17,3 +17,7 @@ dest = sourceFile.split(/\r?\n/).map(line =>  {
 	})
 	return line;
 });
+
+
+let destFile = fs.createWriteStream('dest.txt');
+dest.forEach(obj=> destFile.write(obj+"\n"));
