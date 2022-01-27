@@ -7,17 +7,20 @@ rulesFile.split(/\r?\n/).forEach(line =>  {
   ruleArr.push({source:rule[0] , dest:rule[1]});
 });
 
+let log = "line |  rule\n";
 let dest;
 let sourceFile = fs.readFileSync('source.txt','utf-8');
-dest = sourceFile.split(/\r?\n/).map(line =>  {
+dest = sourceFile.split(/\r?\n/).map((line,index) =>  {
 	ruleArr.forEach(rule=>{
 		if(line.includes(rule.source)){
 			line = line.replaceAll(rule.source,rule.dest);
+			log+=index+1+"	 |  "+rule.source+"-"+rule.dest+"\n";
 		}
 	})
 	return line;
 });
 
+fs.writeFileSync('log.txt',log);
 
 let destFile = fs.createWriteStream('dest.txt');
 dest.forEach(obj=> destFile.write(obj+"\n"));
