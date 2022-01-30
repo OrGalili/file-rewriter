@@ -1,5 +1,7 @@
 const fs = require('fs');
 const util = require('util');
+//npm i iconv-lite
+const iconv = require('iconv-lite');
 const ruleArr = [];
 
 //---- streaming rules file to string array object.
@@ -17,7 +19,14 @@ sourceStr += decoder.decode(); // end-of-stream. result - a decoded string with 
 ruleArr.forEach(rule=>{
 	sourceStr = sourceStr.replaceAll(rule.source,rule.dest);//replaces all sub-strings found in the rules file.
 })
-fs.writeFileSync('dest.txt',sourceStr);
+
+fs.writeFileSync('intermediate.txt',sourceStr);
+
+fs.createReadStream('intermediate.txt')
+    .pipe(iconv.decodeStream('utf8'))
+    .pipe(iconv.encodeStream('win1255'))
+    .pipe(fs.createWriteStream('dest.txt'));
+
 
 //---- creating a log file- where the changes has been made and what rule has been applied for each line.
 let log = "line |  rule\n";
