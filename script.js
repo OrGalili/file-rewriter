@@ -25,10 +25,10 @@ ruleArr.forEach(rule=>{
 fs.writeFileSync('intermediate.txt',sourceStr);// in nodejs the file that created is in UTF-8 encode.
 
 //---- 4. writing from the intermidiate file to a new file in order to preserve the encoding
-fs.createReadStream('intermediate.txt') // access to the intermediate file
-    .pipe(iconv.decodeStream('utf8')) //from UTF-8 encode
-    .pipe(iconv.encodeStream('win1255')) // to windows-1255 encode (in this case)
-    .pipe(fs.createWriteStream('dest.txt')); // to a new file called dest.
+const intermediateFile = fs.readFileSync('intermediate.txt')//access to the itermidiate file
+let strUTF8Decoded = iconv.decode(intermediateFile, 'utf8');// set content of file in a string - utf8 decoded
+let bufferWin1255Encoded = iconv.encode(strUTF8Decoded,"win1255")// encoding from utf8 to win1255 buffer
+fs.writeFileSync("dest.txt",bufferWin1255Encoded);// write the encoded buffer to a new file
 
 
 //---- creating a log file- where the changes has been made and what rule has been applied for each line.
